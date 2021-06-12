@@ -56,7 +56,8 @@ var statusCmd = &cobra.Command{
 			ghTabs = "\t"
 		}
 
-		fmt.Println("Reporting status page results...\n")
+		fmt.Println("Reporting status page results...")
+		fmt.Println("")
 		fmt.Printf("CircleCI:\t%s%s\t%s\n", cciResp.Status.Indicator, cciTabs, cciResp.Status.Description)
 		fmt.Printf("GitHub:\t\t%s%s\t%s\n", ghResp.Status.Indicator, ghTabs, ghResp.Status.Description)
 	},
