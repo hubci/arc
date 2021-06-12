@@ -1,0 +1,121 @@
+version: 2.1
+
+orbs:
+  gor: hubci/goreleaser@1.0
+  osd: circleci/os-detect@0.3.0
+
+executors:
+  linux-docker:
+    docker:
+      - image: cimg/base:2021.04
+  linux-amd64:
+    machine:
+      image: ubuntu-2004:202104-01
+  linux-arm64:
+    machine:
+      image: ubuntu-2004:202104-01
+    resource_class: arm.medium
+  macos:
+    macos:
+      xcode: 12.3.0
+  windows:
+    machine:
+      image: windows-server-2019-vs2019:stable
+      resource_class: windows.medium
+
+workflows:
+  main:
+    jobs:
+      - test
+      - gor/release:
+          version: "0.169.0"
+          go-version: "1.16.5"
+          dry-run: true
+          post-steps:
+            - persist_to_workspace:
+                root: "."
+                paths:
+                  - "dist"
+      - test-with-images:
+          requires:
+            - gor/release
+          matrix:
+            parameters:
+              image:
+                - linux-docker
+                - linux-amd64
+                - linux-arm64
+                - macos
+                #- windows
+  release:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              # Simplified SemVer regex
+              only: /^v\d+\.\d+\.\d+$/
+      - gor/release:
+          version: "0.165.0"
+          go-version: "1.16.4"
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              # Simplified SemVer regex
+              only: /^v\d+\.\d+\.\d+$/
+          post-steps:
+            - persist_to_workspace:
+                root: "."
+                paths:
+                  - "dist"
+          context: main
+
+jobs:
+  test:
+    docker:
+      - image: cimg/go:1.16.5
+    environment:
+      GOTESTSUM_JUNITFILE: "junit/unit-tests.xml"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v1-{{ checksum "go.sum" }}
+      - run:
+          name: "Download Dependancies"
+          command: cd arc && go mod download
+      - run:
+          name: "Run Tests & Coverage"
+          command: |
+            cd ./arc
+            mkdir junit
+            gotestsum -- -coverprofile=coverage.txt -covermode=atomic ./...
+            bash <(curl -s https://codecov.io/bash)
+      - store_test_results:
+          path: junit
+      - store_artifacts:
+          path: junit/unit-tests.xml
+      - run:
+          name: "Upload to Codecov"
+          command: cd arc && bash <(curl -s https://codecov.io/bash)
+      - save_cache:
+          key: go-mod-v1-{{ checksum "go.sum" }}
+          paths:
+            - "/home/circleci/.cache/go-build"
+  test-with-images:
+    parameters:
+      image:
+        type: executor
+    executor: <<parameters.image>>
+    steps:
+      - osd/init
+      - attach_workspace:
+          at: .
+      - run: |
+          if [ $OSD_FAMILY == "linux" ]; then
+            ./dist/arc_linux_$(dpkg --print-architecture)/arc version
+          else
+            ./dist/arc_darwin_amd64/arc version
+          fi
