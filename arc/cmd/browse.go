@@ -15,17 +15,23 @@ var github, circleci bool
 var browseCmd = &cobra.Command{
 	Use:   "browse",
 	Short: "Open this repository in the browser",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 
 		output, err := exec.Command("git", "remote", "get-url", "origin").CombinedOutput()
 		if err != nil {
 			fmt.Printf(err.Error())
 		}
 
-		remoteURL := strings.Split(string(output), ":")[1]
+		remoteURL := string(output)
+
+		remoteURL = strings.TrimPrefix(remoteURL, "git@github.com:")
+		remoteURL = strings.TrimPrefix(remoteURL, "https://github.com/")
+		remoteURL = strings.TrimPrefix(remoteURL, "http://github.com/")
+		remoteURL = strings.TrimSuffix(remoteURL, "\n")
+		remoteURL = strings.TrimSuffix(remoteURL, ".git")
+
 		org := strings.Split(remoteURL, "/")[0]
 		repo := strings.Split(remoteURL, "/")[1]
-		repo = repo[0 : len(repo)-5]
 
 		if circleci {
 
@@ -39,6 +45,7 @@ var browseCmd = &cobra.Command{
 			openInBrowser(browserURL)
 		}
 
+		return nil
 	},
 }
 
