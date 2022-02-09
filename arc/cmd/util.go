@@ -34,6 +34,6 @@ func (this *client) getJSON(url string, payload interface{}) error {
 
 func New() *client {
 
-	return &client{&http.Client{Timeout: 10 * time.Second}}
+	return &client{&http.Client{Timeout: 4 * time.Second}}
 
 }

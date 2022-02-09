@@ -37,11 +37,15 @@ var statusCmd = &cobra.Command{
 
 		client := New()
 
-		err := client.getJSON(cciURL, &cciResp)
-		err = client.getJSON(ghURL, &ghResp)
+		errCCI := client.getJSON(cciURL, &cciResp)
+		errGH := client.getJSON(ghURL, &ghResp)
 
-		if err != nil {
-			fmt.Printf("Status err err   #%v ", err)
+		if errCCI != nil {
+			cciResp.Status.Indicator = "can't connect"
+		}
+
+		if errGH != nil {
+			ghResp.Status.Indicator = "can't connect"
 		}
 
 		var cciTabs = ""
