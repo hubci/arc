@@ -72,6 +72,8 @@ workflows:
                   - "dist"
           context: main-context
       - deb-publish:
+          requires:
+            - gor/release
           filters:
             branches:
               ignore: /.*/
