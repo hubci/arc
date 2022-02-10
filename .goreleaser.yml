@@ -28,7 +28,8 @@ archives:
       darwin: macos
 
 nfpms:
-  - file_name_template: "{{ .ProjectName }}-v{{ .Version }}-{{ .Arch }}{{ if .Arm }}hf{{ end }}"
+  - package_name: hubci-arc
+    file_name_template: "{{ .PackageName }}-v{{ .Version }}-{{ .Arch }}{{ if .Arm }}hf{{ end }}"
     homepage: "https://www.Feliciano.Tech"
     maintainer: "Ricardo N Feliciano <Ricardo@Feliciano.Tech>"
     description: "A helpful CircleCI and GitHub tool."
