@@ -32,13 +32,16 @@ var statusCmd = &cobra.Command{
 
 		var cciResp *spResponse
 		var ghResp *spResponse
+		var linodeResp *spResponse
 		cciURL := "https://status.circleci.com/api/v2/status.json"
 		ghURL := "https://www.githubstatus.com/api/v2/status.json"
+		linodeURL := "https://status.linode.com/api/v2/status.json"
 
 		client := New()
 
 		errCCI := client.getJSON(cciURL, &cciResp)
 		errGH := client.getJSON(ghURL, &ghResp)
+		errLinode := client.getJSON(linodeURL, &linodeResp)
 
 		if errCCI != nil {
 			cciResp.Status.Indicator = "can't connect"
@@ -46,6 +49,10 @@ var statusCmd = &cobra.Command{
 
 		if errGH != nil {
 			ghResp.Status.Indicator = "can't connect"
+		}
+
+		if errLinode != nil {
+			linodeResp.Status.Indicator = "can't connect"
 		}
 
 		var cciTabs = ""
@@ -60,10 +67,17 @@ var statusCmd = &cobra.Command{
 			ghTabs = "\t"
 		}
 
+		var linodeTabs = ""
+		if linodeResp.Status.Indicator == "none" {
+			linodeResp.Status.Indicator = ""
+			linodeTabs = "\t"
+		}
+
 		fmt.Println("Reporting status page results...")
 		fmt.Println("")
 		fmt.Printf("CircleCI:\t%s%s\t%s\n", cciResp.Status.Indicator, cciTabs, cciResp.Status.Description)
 		fmt.Printf("GitHub:\t\t%s%s\t%s\n", ghResp.Status.Indicator, ghTabs, ghResp.Status.Description)
+		fmt.Printf("Linode:\t\t%s%s\t%s\n", linodeResp.Status.Indicator, linodeTabs, linodeResp.Status.Description)
 	},
 }
 
