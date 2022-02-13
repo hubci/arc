@@ -37,6 +37,8 @@ nfpms:
     formats:
       - deb
     bindir: /usr/bin
+    conflicts:
+      - arc
 
 brews:
   - tap:
