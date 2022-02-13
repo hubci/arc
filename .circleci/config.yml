@@ -152,4 +152,9 @@ jobs:
           ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-impish--arc-${CIRCLE_TAG} from repo ftech-ubuntu-impish"
           ssh pkg@pkg.atl.revidian.net "aptly publish switch impish filesystem:ftech:/ubuntu ftech-ubuntu-impish--arc-${CIRCLE_TAG}"
 
+          # Ubuntu 22.04 Jammy
+          ssh pkg@pkg.atl.revidian.net "aptly repo add ftech-ubuntu-jammy ~/incoming/arc-${CIRCLE_TAG}/"
+          ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-jammy--arc-${CIRCLE_TAG} from repo ftech-ubuntu-jammy"
+          ssh pkg@pkg.atl.revidian.net "aptly publish switch jammy filesystem:ftech:/ubuntu ftech-ubuntu-jammy--arc-${CIRCLE_TAG}"
+
           ssh pkg@pkg.atl.revidian.net "rm -r ~/incoming/arc-${CIRCLE_TAG}"
