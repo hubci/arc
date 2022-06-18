@@ -7,13 +7,13 @@ orbs:
 executors:
   linux-docker:
     docker:
-      - image: cimg/base:2022.01
+      - image: cimg/base:2022.06
   linux-amd64:
     machine:
-      image: ubuntu-2004:202201-01
+      image: ubuntu-2204:2022.04.2
   linux-arm64:
     machine:
-      image: ubuntu-2004:202201-01
+      image: ubuntu-2004:2022.04.2
     resource_class: arm.medium
   macos:
     macos:
