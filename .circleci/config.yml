@@ -153,7 +153,6 @@ jobs:
           ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-focal--arc-${CIRCLE_TAG} from repo ftech-ubuntu-focal"
           ssh pkg@pkg.atl.revidian.net "aptly publish switch focal filesystem:ftech:/ubuntu ftech-ubuntu-focal--arc-${CIRCLE_TAG}"
 
-
           # Ubuntu 21.10 Impish
           ssh pkg@pkg.atl.revidian.net "aptly repo add ftech-ubuntu-impish ~/incoming/arc-${CIRCLE_TAG}/"
           ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-impish--arc-${CIRCLE_TAG} from repo ftech-ubuntu-impish"
@@ -163,5 +162,10 @@ jobs:
           ssh pkg@pkg.atl.revidian.net "aptly repo add ftech-ubuntu-jammy ~/incoming/arc-${CIRCLE_TAG}/"
           ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-jammy--arc-${CIRCLE_TAG} from repo ftech-ubuntu-jammy"
           ssh pkg@pkg.atl.revidian.net "aptly publish switch jammy filesystem:ftech:/ubuntu ftech-ubuntu-jammy--arc-${CIRCLE_TAG}"
+
+          # Ubuntu Kinetic
+          ssh pkg@pkg.atl.revidian.net "aptly repo add ftech-ubuntu-kinetic ~/incoming/arc-${CIRCLE_TAG}/"
+          ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-kinetic--arc-${CIRCLE_TAG} from repo ftech-ubuntu-kinetic"
+          ssh pkg@pkg.atl.revidian.net "aptly publish switch kinetic filesystem:ftech:/ubuntu ftech-ubuntu-kinetic--arc-${CIRCLE_TAG}"
 
           ssh pkg@pkg.atl.revidian.net "rm -r ~/incoming/arc-${CIRCLE_TAG}"
