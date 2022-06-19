@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os/exec"
 	"runtime"
@@ -17,7 +18,25 @@ var browseCmd = &cobra.Command{
 	Short: "Open this repository in the browser",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		output, err := exec.Command("git", "remote", "get-url", "origin").CombinedOutput()
+		rawRemotes, err := exec.Command("git", "remote").CombinedOutput()
+		if err != nil {
+			return errors.New("Failed to retrieve git branch names.")
+		}
+
+		remotes := strings.Split(string(rawRemotes), "\n")
+
+		var desiredRemote string
+		for _, remote := range remotes {
+			if remote == "origin" {
+				desiredRemote = remote
+			}
+		}
+
+		if desiredRemote == "" {
+			desiredRemote = remotes[0]
+		}
+
+		output, err := exec.Command("git", "remote", "get-url", desiredRemote).CombinedOutput()
 		if err != nil {
 			fmt.Printf(err.Error())
 		}
