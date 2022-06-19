@@ -1,11 +1,11 @@
 module github.com/hubci/arc
 
-go 1.17
+go 1.18
 
 require (
 	github.com/goccy/go-yaml v1.9.5
-	github.com/magefile/mage v1.12.1
-	github.com/spf13/cobra v1.3.0
+	github.com/magefile/mage v1.13.0
+	github.com/spf13/cobra v1.4.0
 )
 
 require (
