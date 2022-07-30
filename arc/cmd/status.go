@@ -25,6 +25,20 @@ type spResponse struct {
 	Status *spStatus `json:"status"`
 }
 
+type sStatus struct {
+	Updated    time.Time `json:"updated"`
+	Status     string    `json:"status"`
+	StatusCode int       `json:"status_code"`
+}
+
+type sResult struct {
+	StatusOverall *sStatus `json:"status_overall"`
+}
+
+type sResponse struct {
+	Result *sResult `json:"result"`
+}
+
 var (
 	cciFl bool
 
@@ -36,15 +50,19 @@ var (
 			var cciResp *spResponse
 			var ghResp *spResponse
 			var linodeResp *spResponse
+			var gitlabResp *sResponse
+
 			cciURL := "https://status.circleci.com/api/v2/status.json"
 			ghURL := "https://www.githubstatus.com/api/v2/status.json"
 			linodeURL := "https://status.linode.com/api/v2/status.json"
+			gitlabURL := "https://status.gitlab.com/1.0/status/5b36dc6502d06804c08349f7"
 
 			client := New()
 
 			errCCI := client.getJSON(cciURL, &cciResp)
 			errGH := client.getJSON(ghURL, &ghResp)
 			errLinode := client.getJSON(linodeURL, &linodeResp)
+			errGitlab := client.getJSON(gitlabURL, &gitlabResp)
 
 			if errCCI != nil {
 				cciResp.Status.Indicator = "can't connect"
@@ -56,6 +74,10 @@ var (
 
 			if errLinode != nil {
 				linodeResp.Status.Indicator = "can't connect"
+			}
+
+			if errGitlab != nil {
+				gitlabResp.Result.StatusOverall.Status = "can't connect"
 			}
 
 			var cciTabs = ""
@@ -80,6 +102,7 @@ var (
 			fmt.Println("")
 			fmt.Printf("CircleCI:\t%s%s\t%s\n", cciResp.Status.Indicator, cciTabs, cciResp.Status.Description)
 			fmt.Printf("GitHub:\t\t%s%s\t%s\n", ghResp.Status.Indicator, ghTabs, ghResp.Status.Description)
+			fmt.Printf("Gitlab:\t\t\t\t%s\n", gitlabResp.Result.StatusOverall.Status)
 			if !cciFl {
 				fmt.Printf("Linode:\t\t%s%s\t%s\n", linodeResp.Status.Indicator, linodeTabs, linodeResp.Status.Description)
 			}
