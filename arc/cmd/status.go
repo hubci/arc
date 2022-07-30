@@ -49,20 +49,23 @@ var (
 
 			var cciResp *spResponse
 			var ghResp *spResponse
-			var linodeResp *spResponse
 			var gitlabResp *sResponse
+			var linodeResp *spResponse
+			var doResp *spResponse
 
 			cciURL := "https://status.circleci.com/api/v2/status.json"
 			ghURL := "https://www.githubstatus.com/api/v2/status.json"
-			linodeURL := "https://status.linode.com/api/v2/status.json"
 			gitlabURL := "https://status.gitlab.com/1.0/status/5b36dc6502d06804c08349f7"
+			linodeURL := "https://status.linode.com/api/v2/status.json"
+			doURL := "https://status.digitalocean.com/api/v2/status.json"
 
 			client := New()
 
 			errCCI := client.getJSON(cciURL, &cciResp)
 			errGH := client.getJSON(ghURL, &ghResp)
-			errLinode := client.getJSON(linodeURL, &linodeResp)
 			errGitlab := client.getJSON(gitlabURL, &gitlabResp)
+			errLinode := client.getJSON(linodeURL, &linodeResp)
+			errDO := client.getJSON(doURL, &doResp)
 
 			if errCCI != nil {
 				cciResp.Status.Indicator = "can't connect"
@@ -72,12 +75,16 @@ var (
 				ghResp.Status.Indicator = "can't connect"
 			}
 
+			if errGitlab != nil {
+				gitlabResp.Result.StatusOverall.Status = "can't connect"
+			}
+
 			if errLinode != nil {
 				linodeResp.Status.Indicator = "can't connect"
 			}
 
-			if errGitlab != nil {
-				gitlabResp.Result.StatusOverall.Status = "can't connect"
+			if errDO != nil {
+				doResp.Status.Indicator = "can't connect"
 			}
 
 			var cciTabs = ""
@@ -98,6 +105,12 @@ var (
 				linodeTabs = "\t"
 			}
 
+			var doTabs = ""
+			if doResp.Status.Indicator == "none" {
+				doResp.Status.Indicator = ""
+				doTabs = "\t"
+			}
+
 			fmt.Println("Reporting status page results...")
 			fmt.Println("")
 			fmt.Printf("CircleCI:\t%s%s\t%s\n", cciResp.Status.Indicator, cciTabs, cciResp.Status.Description)
@@ -105,6 +118,7 @@ var (
 			fmt.Printf("Gitlab:\t\t\t\t%s\n", gitlabResp.Result.StatusOverall.Status)
 			if !cciFl {
 				fmt.Printf("Linode:\t\t%s%s\t%s\n", linodeResp.Status.Indicator, linodeTabs, linodeResp.Status.Description)
+				fmt.Printf("DigitalOcean:\t%s%s\t%s\n", doResp.Status.Indicator, doTabs, doResp.Status.Description)
 			}
 		},
 	}
