@@ -17,7 +17,7 @@ executors:
     resource_class: arm.medium
   macos:
     macos:
-      xcode: 13.3.0
+      xcode: 13.4.1
   windows:
     machine:
       image: windows-server-2019-vs2019:stable
