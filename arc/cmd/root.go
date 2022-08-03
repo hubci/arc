@@ -11,7 +11,7 @@ var dockerPassword string
 
 var rootCmd = &cobra.Command{
 	Use:   "arc",
-	Short: "A helpful CircleCI and GitHub tool.",
+	Short: "A helpful CircleCI, GitHub, and GitLab tool.",
 	Long:  ``,
 }
 
