@@ -48,12 +48,14 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 
 			var cciResp *spResponse
+			var cfResp *spResponse
 			var ghResp *spResponse
 			var gitlabResp *sResponse
 			var linodeResp *spResponse
 			var doResp *spResponse
 
 			cciURL := "https://status.circleci.com/api/v2/status.json"
+			cfURL := "https://www.cloudflarestatus.com/api/v2/status.json"
 			ghURL := "https://www.githubstatus.com/api/v2/status.json"
 			gitlabURL := "https://status.gitlab.com/1.0/status/5b36dc6502d06804c08349f7"
 			linodeURL := "https://status.linode.com/api/v2/status.json"
@@ -62,6 +64,7 @@ var (
 			client := New()
 
 			errCCI := client.getJSON(cciURL, &cciResp)
+			errCF := client.getJSON(cfURL, &cfResp)
 			errGH := client.getJSON(ghURL, &ghResp)
 			errGitlab := client.getJSON(gitlabURL, &gitlabResp)
 			errLinode := client.getJSON(linodeURL, &linodeResp)
@@ -69,6 +72,10 @@ var (
 
 			if errCCI != nil {
 				cciResp.Status.Indicator = "can't connect"
+			}
+
+			if errCF != nil {
+				cfResp.Status.Indicator = "can't connect"
 			}
 
 			if errGH != nil {
@@ -91,6 +98,12 @@ var (
 			if cciResp.Status.Indicator == "none" {
 				cciResp.Status.Indicator = ""
 				cciTabs = "\t"
+			}
+
+			var cfTabs = ""
+			if cfResp.Status.Indicator == "none" {
+				cfResp.Status.Indicator = ""
+				cfTabs = "\t"
 			}
 
 			var ghTabs = ""
@@ -117,6 +130,7 @@ var (
 			fmt.Printf("GitHub:\t\t%s%s\t%s\n", ghResp.Status.Indicator, ghTabs, ghResp.Status.Description)
 			fmt.Printf("Gitlab:\t\t\t\t%s\n", gitlabResp.Result.StatusOverall.Status)
 			if !cciFl {
+				fmt.Printf("Cloudflare:\t\t%s%s\t%s\n", cfResp.Status.Indicator, cfTabs, cfResp.Status.Description)
 				fmt.Printf("Linode:\t\t%s%s\t%s\n", linodeResp.Status.Indicator, linodeTabs, linodeResp.Status.Description)
 				fmt.Printf("DigitalOcean:\t%s%s\t%s\n", doResp.Status.Indicator, doTabs, doResp.Status.Description)
 			}
