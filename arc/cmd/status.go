@@ -44,7 +44,7 @@ var (
 
 	statusCmd = &cobra.Command{
 		Use:   "status",
-		Short: "Gives you the status page status of both CircleCI and GitHub",
+		Short: "Provides the status page results for various DevOps services",
 		Run: func(cmd *cobra.Command, args []string) {
 
 			var cciResp *spResponse
