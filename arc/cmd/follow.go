@@ -19,7 +19,7 @@ var followCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		if os.Getenv("CIRCLECI_TOKEN") == "" {
-			return fmt.Errorf("The CircleCI token hasn't been set in the evironment.")
+			return fmt.Errorf("The CircleCI token hasn't been set in the environment.")
 		}
 
 		output, err := exec.Command("git", "remote", "get-url", "origin").CombinedOutput()
