@@ -1,5 +1,9 @@
 project_name: arc
 
+before:
+  hooks:
+    - ./scripts/completions.sh
+
 builds:
   - dir: arc
     goos:
@@ -24,6 +28,7 @@ archives:
     files:
       - LICENSE
       - README.md
+      - completions/*
     replacements:
       darwin: macos
 
@@ -39,6 +44,19 @@ nfpms:
     bindir: /usr/bin
     conflicts:
       - arc
+    contents:
+      - src: ./completions/arc.bash
+        dst: /usr/share/bash-completion/completions/arc
+        file_info:
+          mode: 0644
+      - src: ./completions/arc.fish
+        dst: /usr/share/fish/completions/arc.fish
+        file_info:
+          mode: 0644
+      - src: ./completions/arc.zsh
+        dst: /usr/share/zsh/vendor-completions/_arc
+        file_info:
+          mode: 0644
 
 brews:
   - tap:
@@ -52,6 +70,11 @@ brews:
     description: "A helpful CircleCI and GitHub tool."
     test: |
       system "#{bin}/arc", "help"
+    install: |-
+      bin.install "arc"
+      bash_completion.install "completions/arc.bash" => "arc"
+      fish_completion.install "completions/arc.fish"
+      zsh_completion.install "completions/arc.zsh" => "_arc"
 
 checksum:
   name_template: "{{ .ProjectName }}-v{{ .Version }}-checksums.txt"
