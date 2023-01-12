@@ -1,4 +1,4 @@
-# arc - a helpful CircleCI, GitHub, and GitLab tool [![CI Status](https://circleci.com/gh/hubci/arc.svg?style=shield)](https://app.circleci.com/pipelines/github/hubci/arc) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hubci/arc/master/LICENSE)
+# arc - a helpful CircleCI & VCS CLI tool [![CI Status](https://circleci.com/gh/hubci/arc.svg?style=shield)](https://app.circleci.com/pipelines/github/hubci/arc) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hubci/arc/master/LICENSE)
 
 arc provides small, helpful features for developers using CircleCI, GitHub, and GitLab.
 arc is currently considered in alpha so it can change rapidly, including broken changes, before the v1.0 release comes out.
