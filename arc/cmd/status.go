@@ -20,6 +20,7 @@ type spStatus struct {
 	Description string `json:"description"`
 }
 
+// StatusPage.io Response
 type spResponse struct {
 	Page   *spPage   `json:"page"`
 	Status *spStatus `json:"status"`
@@ -35,6 +36,7 @@ type sResult struct {
 	StatusOverall *sStatus `json:"status_overall"`
 }
 
+// Status.io Response
 type sResponse struct {
 	Result *sResult `json:"result"`
 }
@@ -53,6 +55,7 @@ var (
 			var gitlabResp *sResponse
 			var linodeResp *spResponse
 			var doResp *spResponse
+			var dockerResp *sResponse
 
 			cciURL := "https://status.circleci.com/api/v2/status.json"
 			cfURL := "https://www.cloudflarestatus.com/api/v2/status.json"
@@ -60,6 +63,7 @@ var (
 			gitlabURL := "https://status.gitlab.com/1.0/status/5b36dc6502d06804c08349f7"
 			linodeURL := "https://status.linode.com/api/v2/status.json"
 			doURL := "https://status.digitalocean.com/api/v2/status.json"
+			dockerURL := "https://status.docker.com/1.0/status/533c6539221ae15e3f000031"
 
 			client := New()
 
@@ -69,6 +73,7 @@ var (
 			errGitlab := client.getJSON(gitlabURL, &gitlabResp)
 			errLinode := client.getJSON(linodeURL, &linodeResp)
 			errDO := client.getJSON(doURL, &doResp)
+			errDocker := client.getJSON(dockerURL, &dockerResp)
 
 			if errCCI != nil {
 				cciResp.Status.Indicator = "can't connect"
@@ -92,6 +97,10 @@ var (
 
 			if errDO != nil {
 				doResp.Status.Indicator = "can't connect"
+			}
+
+			if errDocker != nil {
+				dockerResp.Result.StatusOverall.Status = "can't connect"
 			}
 
 			var cciTabs = ""
@@ -129,6 +138,7 @@ var (
 			fmt.Printf("CircleCI:\t%s%s\t%s\n", cciResp.Status.Indicator, cciTabs, cciResp.Status.Description)
 			fmt.Printf("GitHub:\t\t%s%s\t%s\n", ghResp.Status.Indicator, ghTabs, ghResp.Status.Description)
 			fmt.Printf("Gitlab:\t\t\t\t%s\n", gitlabResp.Result.StatusOverall.Status)
+			fmt.Printf("Docker:\t\t\t\t%s\n", dockerResp.Result.StatusOverall.Status)
 			if !cciFl {
 				fmt.Printf("Cloudflare:\t\t%s%s\t%s\n", cfResp.Status.Indicator, cfTabs, cfResp.Status.Description)
 				fmt.Printf("Linode:\t\t%s%s\t%s\n", linodeResp.Status.Indicator, linodeTabs, linodeResp.Status.Description)
