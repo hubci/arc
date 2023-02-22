@@ -42,6 +42,15 @@ var (
 
 			fmt.Printf("Cloned successfully to %s/n", filepath+"/"+repo.Name)
 
+			fmt.Println("Now cd'ing into the directory.")
+
+			aCmd = exec.Command("cd", filepath+"/"+repo.Name)
+			stdout, err = aCmd.Output()
+			if err != nil {
+				fmt.Printf("%s/n", stdout)
+				return err
+			}
+
 			return nil
 		},
 	}
