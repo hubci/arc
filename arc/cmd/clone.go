@@ -33,7 +33,7 @@ var (
 				return err
 			}
 
-			aCmd := exec.Command("git", "clone", args[0], filepath+"/"+repo.Name)
+			aCmd := exec.Command("git", "clone", "--recurse-submodules", args[0], filepath+"/"+repo.Name)
 			stdout, err := aCmd.Output()
 			if err != nil {
 				fmt.Printf("%s/n", stdout)
