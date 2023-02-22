@@ -3,10 +3,12 @@ module github.com/hubci/arc
 go 1.20
 
 require (
+	github.com/algolia/algoliasearch-client-go/v3 v3.26.3
 	github.com/goccy/go-yaml v1.9.8
 	github.com/magefile/mage v1.14.0
 	github.com/repowarden/cli v0.11.1
 	github.com/spf13/cobra v1.6.1
+	golang.org/x/mod v0.8.0
 )
 
 require (
