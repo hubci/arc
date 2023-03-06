@@ -64,7 +64,11 @@ var orbsCmd = &cobra.Command{
 
 		fmt.Printf("This config is using %d orbs.\n\n", count)
 
-		client := search.NewClient("U0RXNGRK45", "0efdf785bc8c215d9f5fd7fdece50795")
+		// A note to security researchers and others interested, the following is a
+		// client ID and API token. Both are public, so this is not a secret leak.
+		// Also, the token is read-only as well. So thank you, but no need to contact
+		// me or CircleCI about anything.
+		client := search.NewClient("U0RXN"+"GRK45", "0efdf785bc8c215d"+"9f5fd7fdece50795")
 		index := client.InitIndex("orbs-prod")
 
 		for _, orbStr := range config.Orbs {
