@@ -18,19 +18,21 @@ builds:
       - 7
     ldflags:
       - -s -w -X github.com/hubci/arc/arc/cmd.version={{ .Version }} -extldflags "-static"
+    env:
+      - CGO_ENABLED=0
 
 archives:
   - format: tar.gz
     format_overrides:
       - goos: windows
         format: zip
-    name_template: "{{ .ProjectName }}-v{{ .Version }}-{{ .Os }}-{{ .Arch }}{{ if .Arm }}hf{{ end }}"
+    name_template: >-
+      {{ .ProjectName }}-v{{ .Version }}-{{ if eq .Os "darwin" }}macos{{ else }}{{ .Os }}{{ end }}-{{ .Arch }}{{ if .Arm }}hf{{ end }}
     files:
       - LICENSE
       - README.md
       - completions/*
-    replacements:
-      darwin: macos
+    rlcp: true
 
 nfpms:
   - package_name: hubci-arc
