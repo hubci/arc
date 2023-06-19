@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   gor: hubci/goreleaser@2.3
   osd: hubci/sphere@0.2
+  aptly: felicianotech/aptly@0.1
 
 executors:
   linux-docker:
@@ -147,25 +148,25 @@ jobs:
       - run: |
           ssh pkg@pkg.atl.revidian.net "mkdir ~/incoming/arc-${CIRCLE_TAG}"
           scp ./dist/*.deb pkg@pkg.atl.revidian.net:incoming/arc-${CIRCLE_TAG}/
-
-          # Ubuntu 20.04 Focal
-          ssh pkg@pkg.atl.revidian.net "aptly repo add ftech-ubuntu-focal ~/incoming/arc-${CIRCLE_TAG}/"
-          ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-focal--arc-${CIRCLE_TAG} from repo ftech-ubuntu-focal"
-          ssh pkg@pkg.atl.revidian.net "aptly publish switch focal filesystem:ftech:/ubuntu ftech-ubuntu-focal--arc-${CIRCLE_TAG}"
-
-          # Ubuntu 22.04 Jammy
-          ssh pkg@pkg.atl.revidian.net "aptly repo add ftech-ubuntu-jammy ~/incoming/arc-${CIRCLE_TAG}/"
-          ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-jammy--arc-${CIRCLE_TAG} from repo ftech-ubuntu-jammy"
-          ssh pkg@pkg.atl.revidian.net "aptly publish switch jammy filesystem:ftech:/ubuntu ftech-ubuntu-jammy--arc-${CIRCLE_TAG}"
-
-          # Ubuntu 22.10 Kinetic
-          ssh pkg@pkg.atl.revidian.net "aptly repo add ftech-ubuntu-kinetic ~/incoming/arc-${CIRCLE_TAG}/"
-          ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-kinetic--arc-${CIRCLE_TAG} from repo ftech-ubuntu-kinetic"
-          ssh pkg@pkg.atl.revidian.net "aptly publish switch kinetic filesystem:ftech:/ubuntu ftech-ubuntu-kinetic--arc-${CIRCLE_TAG}"
-
-          # Ubuntu Lunar
-          ssh pkg@pkg.atl.revidian.net "aptly repo add ftech-ubuntu-lunar ~/incoming/arc-${CIRCLE_TAG}/"
-          ssh pkg@pkg.atl.revidian.net "aptly snapshot create ftech-ubuntu-lunar--arc-${CIRCLE_TAG} from repo ftech-ubuntu-lunar"
-          ssh pkg@pkg.atl.revidian.net "aptly publish switch lunar filesystem:ftech:/ubuntu ftech-ubuntu-lunar--arc-${CIRCLE_TAG}"
-
+      - aptly/publish-release:
+          hostname: "pkg@pkg.atl.revidian.net"
+          codename: "focal"
+          project: "arc"
+      - aptly/publish-release:
+          hostname: "pkg@pkg.atl.revidian.net"
+          codename: "jammy"
+          project: "arc"
+      - aptly/publish-release:
+          hostname: "pkg@pkg.atl.revidian.net"
+          codename: "focal"
+          project: "arc"
+      - aptly/publish-release:
+          hostname: "pkg@pkg.atl.revidian.net"
+          codename: "kinetic"
+          project: "arc"
+      - aptly/publish-release:
+          hostname: "pkg@pkg.atl.revidian.net"
+          codename: "lunar"
+          project: "arc"
+      - run: |
           ssh pkg@pkg.atl.revidian.net "rm -r ~/incoming/arc-${CIRCLE_TAG}"
