@@ -40,7 +40,7 @@ var (
 				return err
 			}
 
-			fmt.Printf("Cloned successfully to %s/n", filepath+"/"+repo.Name)
+			fmt.Printf("Cloned successfully to %s\n", filepath+"/"+repo.Name)
 
 			return nil
 		},
