@@ -158,10 +158,6 @@ jobs:
           project: "arc"
       - aptly/publish-release:
           hostname: "pkg@pkg.atl.revidian.net"
-          codename: "focal"
-          project: "arc"
-      - aptly/publish-release:
-          hostname: "pkg@pkg.atl.revidian.net"
           codename: "kinetic"
           project: "arc"
       - aptly/publish-release:
