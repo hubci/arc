@@ -1,6 +1,6 @@
 module github.com/hubci/arc
 
-go 1.20
+go 1.21
 
 require (
 	github.com/algolia/algoliasearch-client-go/v3 v3.29.4
