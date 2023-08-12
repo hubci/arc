@@ -1,4 +1,6 @@
-# arc - a helpful CircleCI & VCS CLI tool [![CI Status](https://circleci.com/gh/hubci/arc.svg?style=shield)](https://app.circleci.com/pipelines/github/hubci/arc) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hubci/arc/master/LICENSE)
+# HubCI's arc ![GitHub release (with filter)](https://img.shields.io/github/v/release/hubci/arc) [![CI Status](https://dl.circleci.com/status-badge/img/gh/hubci/arc/tree/trunk.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/hubci/arc/tree/trunk) [![Go Report Card](https://goreportcard.com/badge/github.com/hubci/arc)](https://goreportcard.com/report/github.com/hubci/arc) [![Go Reference](https://pkg.go.dev/badge/github.com/hubci/arc.svg)](https://pkg.go.dev/github.com/hubci/arc) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hubci/arc/trunk/LICENSE)
+
+A helpful terminal tool for day-to-day programming.
 
 arc provides small, helpful features for developers using CircleCI, GitHub, and GitLab.
 arc is currently considered in alpha so it can change rapidly, including broken changes, before the v1.0 release comes out.
