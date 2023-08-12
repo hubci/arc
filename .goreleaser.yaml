@@ -80,3 +80,9 @@ brews:
 
 checksum:
   name_template: "{{ .ProjectName }}-v{{ .Version }}-checksums.txt"
+
+announce:
+  skip: "{{ gt .Patch 0 }}"
+  mastodon:
+    enabled: true
+    server: "https://nanobyte.cafe"
