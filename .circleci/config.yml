@@ -8,20 +8,20 @@ orbs:
 executors:
   linux-docker:
     docker:
-      - image: cimg/base:2023.04
+      - image: cimg/base:2023.07
   linux-amd64:
     machine:
-      image: ubuntu-2204:2023.04.1
+      image: ubuntu-2204:2023.07.2
   linux-arm64:
     machine:
-      image: ubuntu-2004:2023.04.1
+      image: ubuntu-2004:2023.07.1
     resource_class: arm.medium
   macos:
     macos:
       xcode: 14.0.0
   windows:
     machine:
-      image: windows-server-2022-gui:2023.03.1
+      image: windows-server-2022-gui:2023.07.1
       resource_class: windows.medium
 
 workflows:
@@ -29,8 +29,8 @@ workflows:
     jobs:
       - test
       - gor/release:
-          version: "1.18.2"
-          go-version: "1.20.4"
+          version: "1.20.0"
+          go-version: "1.21.0"
           dry-run: true
           post-steps:
             - persist_to_workspace:
@@ -58,8 +58,8 @@ workflows:
               # Simplified SemVer regex
               only: /^v\d+\.\d+\.\d+$/
       - gor/release:
-          version: "1.18.2"
-          go-version: "1.20.4"
+          version: "1.20.0"
+          go-version: "1.21.0"
           filters:
             branches:
               ignore: /.*/
@@ -85,7 +85,7 @@ workflows:
 jobs:
   test:
     docker:
-      - image: cimg/go:1.20.4
+      - image: cimg/go:1.21.0
     environment:
       GOTESTSUM_JUNITFILE: "junit/unit-tests.xml"
     steps:
@@ -138,7 +138,7 @@ jobs:
           fi
   deb-publish:
     docker:
-      - image: cimg/base:2023.04
+      - image: cimg/base:2023.07
     steps:
       - attach_workspace:
           at: .
