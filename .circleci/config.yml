@@ -4,6 +4,7 @@ orbs:
   gor: hubci/goreleaser@2.3
   osd: hubci/sphere@0.2
   aptly: felicianotech/aptly@0.1
+  ts: hubci/tailscale@0.3
 
 executors:
   linux-docker:
@@ -81,6 +82,7 @@ workflows:
             tags:
               # Simplified SemVer regex
               only: /^v\d+\.\d+\.\d+$/
+          context: k8s-ctx
 
 jobs:
   test:
@@ -137,32 +139,36 @@ jobs:
             ./dist/arc_darwin_amd64${V1}/arc version
           fi
   deb-publish:
-    docker:
-      - image: cimg/base:2023.07
+    executor: linux-amd64
     steps:
       - attach_workspace:
           at: .
-      - add_ssh_keys
+      - ts/install
+      - ts/connect
       - run: |
-          echo 'pkg.atl.revidian.net ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBE16slz1okRPeUhxIpzBCn9rHqjk51ylxEYlYXvblswcxOQ0rPyAX6N8Bd2pnsh99xce/jaX2KJHPLPCc+zAXTg= root@li361-16' >> ~/.ssh/known_hosts
-      - run: |
-          ssh pkg@pkg.atl.revidian.net "mkdir ~/incoming/arc-${CIRCLE_TAG}"
-          scp ./dist/*.deb pkg@pkg.atl.revidian.net:incoming/arc-${CIRCLE_TAG}/
-      - aptly/publish-release:
-          hostname: "pkg@pkg.atl.revidian.net"
-          codename: "focal"
-          project: "arc"
-      - aptly/publish-release:
-          hostname: "pkg@pkg.atl.revidian.net"
-          codename: "jammy"
-          project: "arc"
-      - aptly/publish-release:
-          hostname: "pkg@pkg.atl.revidian.net"
-          codename: "lunar"
-          project: "arc"
-      - aptly/publish-release:
-          hostname: "pkg@pkg.atl.revidian.net"
-          codename: "mantic"
-          project: "arc"
-      - run: |
-          ssh pkg@pkg.atl.revidian.net "rm -r ~/incoming/arc-${CIRCLE_TAG}"
+          # Upload the .deb files - one line per arch type
+          curl -X POST -F file=@./dist/hubci-arc-${CIRCLE_TAG}-amd64.deb "https://aptly.horse-dragon.ts.net/api/files/arc-${CIRCLE_TAG}"
+          curl -X POST -F file=@./dist/hubci-arc-${CIRCLE_TAG}-arm64.deb "https://aptly.horse-dragon.ts.net/api/files/arc-${CIRCLE_TAG}"
+          curl -X POST -F file=@./dist/hubci-arc-${CIRCLE_TAG}-armhf.deb "https://aptly.horse-dragon.ts.net/api/files/arc-${CIRCLE_TAG}"
+
+          # Each repo/snapshot below should include the param to not delete the uploaded files except for the last one
+
+          # Release packages for Ubuntu 20.04 "Focal"
+          curl -X POST "https://aptly.horse-dragon.ts.net/api/repos/ftech-ubuntu-focal/file/arc-${CIRCLE_TAG}?noRemove=1"
+          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-focal--arc-'$CIRCLE_TAG'"}' "https://aptly.horse-dragon.ts.net/api/repos/ftech-ubuntu-focal/snapshots"
+          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-focal--arc-'$CIRCLE_TAG'"}]}' "https://aptly.horse-dragon.ts.net/api/publish/filesystem:ftech:ubuntu/focal"
+
+          # Release packages for Ubuntu 22.04 "Jammy"
+          curl -X POST "https://aptly.horse-dragon.ts.net/api/repos/ftech-ubuntu-jammy/file/arc-${CIRCLE_TAG}?noRemove=1"
+          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-jammy--arc-'$CIRCLE_TAG'"}' "https://aptly.horse-dragon.ts.net/api/repos/ftech-ubuntu-jammy/snapshots"
+          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-jammy--arc-'$CIRCLE_TAG'"}]}' "https://aptly.horse-dragon.ts.net/api/publish/filesystem:ftech:ubuntu/jammy"
+
+          # Release packages for Ubuntu 23.10 "Mantic"
+          curl -X POST "https://aptly.horse-dragon.ts.net/api/repos/ftech-ubuntu-mantic/file/arc-${CIRCLE_TAG}?noRemove=1"
+          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-mantic--arc-'$CIRCLE_TAG'"}' "https://aptly.horse-dragon.ts.net/api/repos/ftech-ubuntu-mantic/snapshots"
+          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-mantic--arc-'$CIRCLE_TAG'"}]}' "https://aptly.horse-dragon.ts.net/api/publish/filesystem:ftech:ubuntu/mantic"
+
+          # Release packages for Ubuntu "Noble"
+          curl -X POST "https://aptly.horse-dragon.ts.net/api/repos/ftech-ubuntu-noble/file/arc-${CIRCLE_TAG}"
+          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-noble--arc-'$CIRCLE_TAG'"}' "https://aptly.horse-dragon.ts.net/api/repos/ftech-ubuntu-noble/snapshots"
+          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-noble--arc-'$CIRCLE_TAG'"}]}' "https://aptly.horse-dragon.ts.net/api/publish/filesystem:ftech:ubuntu/noble"
