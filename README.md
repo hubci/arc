@@ -21,7 +21,7 @@ Overtime, we'll be adding more support until it comes into feature parity with t
 
 ### Linux
 
-There are a few ways you can install arc on a Linux amd64 or arm64 system.
+There are a few ways you can install arc on a Linux amd64, arm64, or armhf system.
 
 #### Ubuntu Apt Repository (recommended)
 I (Ricardo N Feliciano) run an Apt/Debian repository for a lot of my software, which includes Arc.
@@ -30,13 +30,13 @@ The benefit of the Apt repository is that updates are handled by Ubuntu's built-
 For security reasons, first we install the GPG key for the repository:
 
 ```bash
-sudo wget "http://pkg.feliciano.tech/ftech-archive-keyring.gpg" -P /usr/share/keyrings/
+sudo wget "https://pkg.feliciano.tech/ftech-archive-keyring.gpg" -P /usr/share/keyrings/
 ```
 
 Now we add the repository to the system:
 
 ```bash
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ftech-archive-keyring.gpg] http://pkg.feliciano.tech/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/felicianotech.list
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ftech-archive-keyring.gpg] https://pkg.feliciano.tech/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/felicianotech.list
 ```
 
 Finally, we can install Arc:
