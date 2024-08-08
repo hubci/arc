@@ -1,3 +1,4 @@
+version: 2
 project_name: arc
 
 before:
@@ -32,7 +33,6 @@ archives:
       - LICENSE
       - README.md
       - completions/*
-    rlcp: true
 
 nfpms:
   - package_name: hubci-arc
@@ -61,13 +61,13 @@ nfpms:
           mode: 0644
 
 brews:
-  - tap:
+  - repository:
       owner: hubci
       name: homebrew-tap
     commit_author:
       name: "Ricardo N Feliciano (FelicianoTech)"
       email: "Ricardo@Feliciano.Tech"
-    folder: Formula
+    directory: Formula
     homepage: "https://github.com/hubci/arc"
     description: "A helpful CircleCI and GitHub tool."
     test: |

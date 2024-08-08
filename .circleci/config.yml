@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  gor: hubci/goreleaser@2.3
+  gor: hubci/goreleaser@2.5
   osd: hubci/sphere@0.2
   aptly: felicianotech/aptly@0.1
   ts: hubci/tailscale@0.3
@@ -9,17 +9,18 @@ orbs:
 executors:
   linux-docker:
     docker:
-      - image: cimg/base:2023.07
+      - image: cimg/base:2024.07
+    resource_class: small
   linux-amd64:
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:2024.05.1
   linux-arm64:
     machine:
-      image: ubuntu-2004:2023.07.1
+      image: ubuntu-2204:2024.05.1
     resource_class: arm.medium
   macos:
     macos:
-      xcode: 14.0.0
+      xcode: 15.2.0
   windows:
     machine:
       image: windows-server-2022-gui:2023.07.1
@@ -30,8 +31,8 @@ workflows:
     jobs:
       - test
       - gor/release:
-          version: "1.20.0"
-          go-version: "1.21.0"
+          version: "2.1.0"
+          go-version: "1.22.6"
           dry-run: true
           post-steps:
             - persist_to_workspace:
@@ -59,8 +60,8 @@ workflows:
               # Simplified SemVer regex
               only: /^v\d+\.\d+\.\d+$/
       - gor/release:
-          version: "1.20.0"
-          go-version: "1.21.0"
+          version: "2.1.0"
+          go-version: "1.22.6"
           filters:
             branches:
               ignore: /.*/
@@ -87,7 +88,7 @@ workflows:
 jobs:
   test:
     docker:
-      - image: cimg/go:1.21.0
+      - image: cimg/go:1.22.6
     environment:
       GOTESTSUM_JUNITFILE: "junit/unit-tests.xml"
     steps:
