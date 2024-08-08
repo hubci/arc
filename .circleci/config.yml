@@ -148,33 +148,33 @@ jobs:
       - ts/connect
       - run: |
           # Upload the .deb files - one line per arch type
-          curl -X POST -F file=@./dist/hubci-arc-${CIRCLE_TAG}-amd64.deb "https://ft-mobile-1.horse-dragon.ts.net/api/files/arc-${CIRCLE_TAG}"
-          curl -X POST -F file=@./dist/hubci-arc-${CIRCLE_TAG}-arm64.deb "https://ft-mobile-1.horse-dragon.ts.net/api/files/arc-${CIRCLE_TAG}"
-          curl -X POST -F file=@./dist/hubci-arc-${CIRCLE_TAG}-armhf.deb "https://ft-mobile-1.horse-dragon.ts.net/api/files/arc-${CIRCLE_TAG}"
+          curl -X POST -F file=@./dist/hubci-arc-${CIRCLE_TAG}-amd64.deb "http://ft-mobile-1.horse-dragon.ts.net:1993/api/files/arc-${CIRCLE_TAG}"
+          curl -X POST -F file=@./dist/hubci-arc-${CIRCLE_TAG}-arm64.deb "http://ft-mobile-1.horse-dragon.ts.net:1993/api/files/arc-${CIRCLE_TAG}"
+          curl -X POST -F file=@./dist/hubci-arc-${CIRCLE_TAG}-armhf.deb "http://ft-mobile-1.horse-dragon.ts.net:1993/api/files/arc-${CIRCLE_TAG}"
 
           # Each repo/snapshot below should include the param to not delete the uploaded files `?noRemove=1` except for the last one
 
           # Release packages for Ubuntu 20.04 "Focal" - remove around April 2025
-          curl -X POST "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-ubuntu-focal/file/arc-${CIRCLE_TAG}?noRemove=1"
-          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-focal--arc-'$CIRCLE_TAG'"}' "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-ubuntu-focal/snapshots"
-          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-focal--arc-'$CIRCLE_TAG'"}]}' "https://ft-mobile-1.horse-dragon.ts.net/api/publish/filesystem:ftech:ubuntu/focal"
+          curl -X POST "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-ubuntu-focal/file/arc-${CIRCLE_TAG}?noRemove=1"
+          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-focal--arc-'$CIRCLE_TAG'"}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-ubuntu-focal/snapshots"
+          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-focal--arc-'$CIRCLE_TAG'"}]}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/publish/filesystem:ftech:ubuntu/focal"
 
           # Release packages for Ubuntu 22.04 "Jammy" - remove around April 2027
-          curl -X POST "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-ubuntu-jammy/file/arc-${CIRCLE_TAG}?noRemove=1"
-          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-jammy--arc-'$CIRCLE_TAG'"}' "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-ubuntu-jammy/snapshots"
-          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-jammy--arc-'$CIRCLE_TAG'"}]}' "https://ft-mobile-1.horse-dragon.ts.net/api/publish/filesystem:ftech:ubuntu/jammy"
+          curl -X POST "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-ubuntu-jammy/file/arc-${CIRCLE_TAG}?noRemove=1"
+          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-jammy--arc-'$CIRCLE_TAG'"}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-ubuntu-jammy/snapshots"
+          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-jammy--arc-'$CIRCLE_TAG'"}]}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/publish/filesystem:ftech:ubuntu/jammy"
 
           # Release packages for Debian 12 "Bookworm" (and Raspberry Pi OS) - remove around June 2027
-          curl -X POST "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-debian-bookworm/file/arc-${CIRCLE_TAG}?noRemove=1"
-          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-debian-bookworm--arc-'$CIRCLE_TAG'"}' "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-debian-bookworm/snapshots"
-          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-debian-bookworm--arc-'$CIRCLE_TAG'"}]}' "https://ft-mobile-1.horse-dragon.ts.net/api/publish/filesystem:ftech:debian/bookworm"
+          curl -X POST "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-debian-bookworm/file/arc-${CIRCLE_TAG}?noRemove=1"
+          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-debian-bookworm--arc-'$CIRCLE_TAG'"}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-debian-bookworm/snapshots"
+          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-debian-bookworm--arc-'$CIRCLE_TAG'"}]}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/publish/filesystem:ftech:debian/bookworm"
 
           # Release packages for Ubuntu 24.04 "Noble" - remove around April 2029
-          curl -X POST "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-ubuntu-noble/file/arc-${CIRCLE_TAG}?noRemove=1"
-          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-noble--arc-'$CIRCLE_TAG'"}' "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-ubuntu-noble/snapshots"
-          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-noble--arc-'$CIRCLE_TAG'"}]}' "https://ft-mobile-1.horse-dragon.ts.net/api/publish/filesystem:ftech:ubuntu/noble"
+          curl -X POST "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-ubuntu-noble/file/arc-${CIRCLE_TAG}?noRemove=1"
+          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-noble--arc-'$CIRCLE_TAG'"}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-ubuntu-noble/snapshots"
+          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-noble--arc-'$CIRCLE_TAG'"}]}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/publish/filesystem:ftech:ubuntu/noble"
 
           # Release packages for Ubuntu "Oracular"
-          curl -X POST "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-ubuntu-oracular/file/arc-${CIRCLE_TAG}"
-          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-oracular--arc-'$CIRCLE_TAG'"}' "https://ft-mobile-1.horse-dragon.ts.net/api/repos/ftech-ubuntu-oracular/snapshots"
-          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-oracular--arc-'$CIRCLE_TAG'"}]}' "https://ft-mobile-1.horse-dragon.ts.net/api/publish/filesystem:ftech:ubuntu/oracular"
+          curl -X POST "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-ubuntu-oracular/file/arc-${CIRCLE_TAG}"
+          curl -X POST -H 'Content-Type: application/json' --data '{"Name": "ftech-ubuntu-oracular--arc-'$CIRCLE_TAG'"}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/repos/ftech-ubuntu-oracular/snapshots"
+          curl -X PUT -H 'Content-Type: application/json' --data '{"Snapshots": [{"Component": "main", "Name": "ftech-ubuntu-oracular--arc-'$CIRCLE_TAG'"}]}' "http://ft-mobile-1.horse-dragon.ts.net:1993/api/publish/filesystem:ftech:ubuntu/oracular"
