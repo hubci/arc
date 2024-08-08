@@ -136,7 +136,7 @@ jobs:
 
             ./dist/arc_linux_$(dpkg --print-architecture)${V1}/arc version
           else
-            ./dist/arc_darwin_amd64${V1}/arc version
+            ./dist/arc_darwin_arm64/arc version
           fi
   deb-publish:
     executor: linux-amd64
