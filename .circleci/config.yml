@@ -29,13 +29,6 @@ executors:
 workflows:
   release-wf:
     jobs:
-      - test:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              # Simplified SemVer regex
-              only: /^v\d+\.\d+\.\d+$/
       - gor/release:
           version: "2.1.0"
           go-version: "1.22.6"
