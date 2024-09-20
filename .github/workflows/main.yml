@@ -21,7 +21,7 @@ jobs:
         tern version
         go install gotest.tools/gotestsum@latest
         gotestsum --version
-    - run: cd arc && mage -v test
+    - run: mage -v test
   build-dry-run:
     runs-on: ubuntu-22.04
     steps:
