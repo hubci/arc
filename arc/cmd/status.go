@@ -63,7 +63,7 @@ var (
 			gitlabURL := "https://status.gitlab.com/1.0/status/5b36dc6502d06804c08349f7"
 			linodeURL := "https://status.linode.com/api/v2/status.json"
 			doURL := "https://status.digitalocean.com/api/v2/status.json"
-			dockerURL := "https://status.docker.com/1.0/status/533c6539221ae15e3f000031"
+			dockerURL := "https://www.dockerstatus.com/1.0/status/533c6539221ae15e3f000031"
 
 			client := New()
 
