@@ -41,7 +41,12 @@ func TestClonePass(t *testing.T) {
 	rootCmd.Execute()
 
 	// check to see if repo was cloned
-	if _, err := os.Stat("/home/circleci/Repos/hubci/arc/.git"); os.IsNotExist(err) {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		t.Error("Failed to read user's home directory.")
+	}
+
+	if _, err := os.Stat(homeDir + "/Repos/hubci/arc/.git"); os.IsNotExist(err) {
 		t.Error("`arc clone` failed to clone the arc repository.")
 	}
 }

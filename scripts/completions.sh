@@ -6,5 +6,5 @@ rm -rf ./completions
 mkdir ./completions
 
 for sh in bash fish zsh; do
-	go run ./arc/main.go completion "$sh" >"completions/arc.$sh"
+	go run ./arc/. completion "$sh" >"completions/arc.$sh"
 done

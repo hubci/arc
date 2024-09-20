@@ -27,29 +27,6 @@ executors:
       resource_class: windows.medium
 
 workflows:
-  main-wf:
-    jobs:
-      - test
-      - gor/release:
-          version: "2.1.0"
-          go-version: "1.22.6"
-          dry-run: true
-          post-steps:
-            - persist_to_workspace:
-                root: "."
-                paths:
-                  - "dist"
-      - test-with-images:
-          requires:
-            - gor/release
-          matrix:
-            parameters:
-              image:
-                - linux-docker
-                - linux-amd64
-                - linux-arm64
-                - macos
-                #- windows
   release-wf:
     jobs:
       - test:
@@ -86,59 +63,6 @@ workflows:
           context: k8s-ctx
 
 jobs:
-  test:
-    docker:
-      - image: cimg/go:1.22.6
-    environment:
-      GOTESTSUM_JUNITFILE: "junit/unit-tests.xml"
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - go-mod-v1-{{ checksum "go.sum" }}
-      - run:
-          name: "Download Dependancies"
-          command: cd arc && go mod download
-      - run:
-          name: "Run Tests & Coverage"
-          command: |
-            cd ./arc
-            mkdir junit
-            gotestsum -- -coverprofile=coverage.txt -covermode=atomic ./...
-            bash <(curl -s https://codecov.io/bash)
-      - store_test_results:
-          path: junit
-      - store_artifacts:
-          path: junit/unit-tests.xml
-      - run:
-          name: "Upload to Codecov"
-          command: cd arc && bash <(curl -s https://codecov.io/bash)
-      - save_cache:
-          key: go-mod-v1-{{ checksum "go.sum" }}
-          paths:
-            - "/home/circleci/.cache/go-build"
-  test-with-images:
-    parameters:
-      image:
-        type: executor
-    executor: <<parameters.image>>
-    steps:
-      - osd/init
-      - attach_workspace:
-          at: .
-      - run: |
-          V1=""
-
-          if uname -m | grep "x86_64"; then
-            V1="_v1"
-          fi
-
-          if [ $OSD_FAMILY == "linux" ]; then
-
-            ./dist/arc_linux_$(dpkg --print-architecture)${V1}/arc version
-          else
-            ./dist/arc_darwin_arm64/arc version
-          fi
   deb-publish:
     executor: linux-amd64
     steps:
